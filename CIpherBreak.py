@@ -1,4 +1,5 @@
-#Haresh Shiwcharan 
+#Haresh Shiwcharan
+#Omoze Oyarebu
 #Assignment 4: Break the Cipher using frequency Analysis
 
 from collections import Counter
