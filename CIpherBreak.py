@@ -116,7 +116,9 @@ plt.tight_layout()
 plt.show()
 
 #print bigram and trigram
-print("Bilgram CipherText Frequency:\n")
+print("Bigram English Frequency:\n")
+print_bigrams(english_bigram_frequency)
+print("\nBigram CipherText Frequency:\n")
 print_bigrams(frequency2)
 print("\n\nTrigram Ciphertext Freqency:\n")
 print_trigrams(frequency3)
@@ -124,13 +126,25 @@ print_trigrams(frequency3)
 
 # Function to create a mapping based on sorted frequencies
 def create_mapping(ciphertext_frequency, english_frequency):
-    sorted_ciphertext_frequency = [item[0] for item in ciphertext_frequency.most_common()]
-    sorted_english_frequency = sorted(english_frequency.keys(), key=lambda x: english_frequency[x], reverse=True)
-    return dict(zip(sorted_ciphertext_frequency, sorted_english_frequency))
+    # Get the 6 most common letters in the ciphertext
+    sorted_ciphertext = sorted(ciphertext_frequency.items(), key=lambda x: x[1], reverse=True)
+    top_ciphertext = [item[0] for item in sorted_ciphertext[:6]]
 
-# Create mapping
+    # Get the 6 most common letters in English
+    sorted_english = sorted(english_frequency.items(), key=lambda x: x[1], reverse=True)
+    top_english = [item[0] for item in sorted_english[:6]]
+
+    # Create the mapping
+    mapping = {}
+    for i in range(min(len(top_ciphertext), len(top_english))):
+        mapping[top_ciphertext[i]] = top_english[i]
+
+    return mapping
+
+
+# Create mapping for 6 frequent only
 mapping = create_mapping(frequency1, english_letter_frequency)
-print("\nMapped:\n", mapping)
+#print(mapping)
 
 # Function to decrypt the ciphertext
 def decrypt(ciphertext, mapping):
@@ -140,10 +154,13 @@ def decrypt(ciphertext, mapping):
     print(ciphertext)
 
     for char in ciphertext:
-        if char in mapping:
-            deciphered_plaintext += mapping[char]
+        if char.upper() in mapping:
+            if char.isupper():
+                deciphered_plaintext += mapping[char.upper()].lower()
+            else:
+                deciphered_plaintext += char
         else:
-            deciphered_plaintext += char  # If the character is not in mapping(spaces, special characters)
+            deciphered_plaintext += char  # If the character is not in mapping (spaces, special characters)
 
     print("\nInitial Deciphered Text:\n", deciphered_plaintext)
 
