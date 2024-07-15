@@ -3,6 +3,9 @@
 #Yonghyeon Shin
 
 #Assignment 4: Break the Cipher using frequency Analysis
+#Install matplot for making graph charts
+#pip install matplotlib
+
 import matplotlib.pyplot as plt
 from collections import Counter
 
