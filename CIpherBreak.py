@@ -1,5 +1,6 @@
 #Haresh Shiwcharan
 #Omoze Oyarebu
+#Yonghyeon Shin
 
 #Assignment 4: Break the Cipher using frequency Analysis
 import matplotlib.pyplot as plt
@@ -13,7 +14,7 @@ english_letter_frequency = {
     'K': 0.69, 'X': 0.17, 'Q': 0.11, 'J': 0.10, 'Z': 0.07
 }
 #known english bigrams
-english_bilgram_frequency = {
+english_bigram_frequency = {
     'th': 3.56, 'he': 3.02, 'in': 2.43, 'er': 2.05, 'an': 1.99,
     're': 1.86, 'nd': 1.81, 'at': 1.58, 'on': 1.48, 'nt': 1.41,
     'ha': 1.37, 'es': 1.34, 'st': 1.32, 'en': 1.29, 'ed': 1.27,
