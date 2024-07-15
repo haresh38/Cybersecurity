@@ -1,5 +1,6 @@
 #Haresh Shiwcharan
 #Omoze Oyarebu
+
 #Assignment 4: Break the Cipher using frequency Analysis
 import matplotlib.pyplot as plt
 from collections import Counter
@@ -36,20 +37,19 @@ ciphertext2 = ciphertext.replace(" ", "")  # removes spaces
 # Function to calculate letter frequencies
 def calculate_letter_frequency(text):
     frequency = Counter(text)
-    return frequency
+    sorted_frequency = dict(sorted(frequency.items(), key=lambda item: item[1], reverse=True))
+    return sorted_frequency
 
 def calculate_bigram_frequency(text):
-  # Bigrams Frequency in String 
-  # Using a loop and dictionary 
-  freq_dict = {}
-  for i in range(1, len(text)):
-      bigram = text[i-1:i+1]
-      if bigram in freq_dict:
-          freq_dict[bigram] += 1
-      else:
-          freq_dict[bigram] = 1
-  
-  return freq_dict
+    freq_dict = {}
+    for i in range(1, len(text)):
+        bigram = text[i-1:i+1]
+        if bigram in freq_dict:
+            freq_dict[bigram] += 1
+        else:
+            freq_dict[bigram] = 1
+    sorted_freq_dict = dict(sorted(freq_dict.items(), key=lambda item: item[1], reverse=True))
+    return sorted_freq_dict
 
 def print_bigrams(freq_dict):
     count = 0
@@ -73,7 +73,9 @@ def calculate_trigram_frequency(text):
         else:
             trigram_counts[trigram] = 1
     
-    return trigram_counts
+    sorted_trigram_counts = dict(sorted(trigram_counts.items(), key=lambda item: item[1], reverse=True))
+
+    return sorted_trigram_counts
 
 def print_trigrams(trigrams):
     count = 0
@@ -90,7 +92,7 @@ frequency2 = calculate_bigram_frequency(ciphertext2)
 frequency3 = calculate_trigram_frequency(ciphertext2)
 
 #graphing
-letters = sorted(frequency1.keys())
+letters = frequency1.keys()
 frequencies =[frequency1[letter] for letter in letters]
 
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
@@ -120,29 +122,26 @@ print("Bigram English Frequency:\n")
 print_bigrams(english_bigram_frequency)
 print("\nBigram CipherText Frequency:\n")
 print_bigrams(frequency2)
+print("Trigram English Frequency:\n")
+print_trigrams(english_trigrams_frequency)
 print("\n\nTrigram Ciphertext Freqency:\n")
 print_trigrams(frequency3)
 # Step 3: Mapping and decryption
 
 # Function to create a mapping based on sorted frequencies
 def create_mapping(ciphertext_frequency, english_frequency):
-    # Get the 6 most common letters in the ciphertext
-    sorted_ciphertext = sorted(ciphertext_frequency.items(), key=lambda x: x[1], reverse=True)
-    top_ciphertext = [item[0] for item in sorted_ciphertext[:6]]
-
-    # Get the 6 most common letters in English
-    sorted_english = sorted(english_frequency.items(), key=lambda x: x[1], reverse=True)
-    top_english = [item[0] for item in sorted_english[:6]]
-
+    # Get the most common letter in the ciphertext
+    most_common_ciphertext_letter = max(ciphertext_frequency, key=ciphertext_frequency.get)
+    
+    # Get the most common letter in English
+    most_common_english_letter = max(english_frequency, key=english_frequency.get)
+    
     # Create the mapping
-    mapping = {}
-    for i in range(min(len(top_ciphertext), len(top_english))):
-        mapping[top_ciphertext[i]] = top_english[i]
-
+    mapping = {most_common_ciphertext_letter: most_common_english_letter}
+    
     return mapping
 
-
-# Create mapping for 6 frequent only
+# Create mapping for most frequent only
 mapping = create_mapping(frequency1, english_letter_frequency)
 #print(mapping)
 
@@ -165,6 +164,7 @@ def decrypt(ciphertext, mapping):
     print("\nInitial Deciphered Text:\n", deciphered_plaintext)
 
     # Ask user if they want to modify the decrypted text
+    i = 1
     modify_text = input("\nWould you like to modify the deciphered text? (y/n): ").lower()
     if modify_text == 'y':
         while True:
@@ -174,7 +174,8 @@ def decrypt(ciphertext, mapping):
             replace_char = input("Replace with: ")
             deciphered_plaintext = deciphered_plaintext.replace(find_char, replace_char)
 
-            print("\nModified Deciphered Text:\n", deciphered_plaintext)
+            print(f"\nModified Deciphered Text {i}:\n", deciphered_plaintext)
+            i += 1
 
 # Call the decryption function
 decrypt(ciphertext, mapping)
